@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # Execution example:
-# python vcl_tests_main.py --bn 0 --use_reg 1 --out_file vcl_elu11 --device 0 --model elu11
+# python vcl_tests_main.py --bn 0 --use_reg 1 --out_file elu11 --device 0 --model elu11
 #
 # A Reference implementation in pytorch for the Variance Constancy Loss
 #
@@ -27,30 +27,46 @@ def parseArguments():
     parser = argparse.ArgumentParser()
 
     # Positional mandatory arguments
-    parser.add_argument("--dataset", type=str, default="cifar10", help="Choose dataset [cifar10|cifar100]")
-    parser.add_argument("--exp_name", type=str, default="1", help="Experiment name")
-    parser.add_argument("--bn", type=int, default=0, help="Use batch normalization (binary)")
+    parser.add_argument("--dataset", type=str, default="cifar10",
+                        help="Choose dataset [cifar10|cifar100]")
+    parser.add_argument("--exp_name", type=str, default="1",
+                        help="Experiment name")
+    parser.add_argument("--bn", type=int, default=0,
+                        help="Use batch normalization (binary)")
     parser.add_argument("--batchsize", type=int, default=250, help="Batch size")
     parser.add_argument("--lr", type=float, default=0.05, help="Learning rate")
     parser.add_argument("--epochs", type=int, default=500, help="Number of epochs")
-    parser.add_argument("--sample_size", type=int, default=5, help="Sample size for vcl regularization")
-    parser.add_argument("--eps", type=float, default=0.1, help="Epsilon for vcl stability")
-    parser.add_argument("--use_reg", type=int, default=1, help="Use VCL regularizer (binary)")
-    parser.add_argument("--model", type=str, default='elu11', help="Model to use [elu11]")
-    parser.add_argument("--gamma", type=float, default=0.01, help="Gamma value (VCL weight)")
-    parser.add_argument("--gamma_l2", type=float, default=0.0001, help="L2 regularization (weight decay)")
-    parser.add_argument("--activation", type=str, default='elu', help="Activation_type [elu|relu|lrelu|tanh]")
-    parser.add_argument("--train_path_10", type=str, default='../data/cifar-10-batches-py/', help="CIFAR10 Train"
-                                                                                                  " data path")
-    parser.add_argument("--test_path_10", type=str, default='../data/cifar-10-batches-py/', help="CIFAR10 Test "
-                                                                                                 "data path")
-    parser.add_argument("--train_path_100", type=str, default='../data/cifar-100-batches-py/', help="CIFAR 100 train "
-                                                                                                    "data path")
-    parser.add_argument("--test_path_100", type=str, default='../data/cifar-100-batches-py/', help="CIFAR 100 test "
-                                                                                                   "data path")
+    parser.add_argument("--sample_size", type=int, default=5,
+                        help="Sample size for vcl regularization")
+    parser.add_argument("--eps", type=float, default=0.1,
+                        help="Epsilon for vcl stability")
+    parser.add_argument("--use_reg", type=int, default=1,
+                        help="Use VCL (binary)")
+    parser.add_argument("--model", type=str, default='elu11',
+                        help="Model to use [elu11]")
+    parser.add_argument("--gamma", type=float, default=0.01,
+                        help="Gamma value (VCL weight)")
+    parser.add_argument("--gamma_l2", type=float, default=0.0001,
+                        help="L2 regularization (weight decay)")
+    parser.add_argument("--activation", type=str, default='elu',
+                        help="Activation_type [elu|relu|lrelu|tanh]")
+    parser.add_argument("--train_path_10", type=str,
+                        default='../data/cifar-10-batches-py/', help="CIFAR10 Train"
+                                                                     " data path")
+    parser.add_argument("--test_path_10", type=str,
+                        default='../data/cifar-10-batches-py/', help="CIFAR10 Test "
+                                                                     "data path")
+    parser.add_argument("--train_path_100", type=str,
+                        default='../data/cifar-100-batches-py/', help="CIFAR 100 train "
+                                                                      "data path")
+    parser.add_argument("--test_path_100", type=str,
+                        default='../data/cifar-100-batches-py/', help="CIFAR 100 test "
+                                                                      "data path")
     parser.add_argument("--device", type=str, default='0', help="CUDA device to use")
-    parser.add_argument("--out_file", type=str, default='', help="File to write results to")
-    parser.add_argument("--save", type=str, default='checkpoints/', help="Directory to save results")
+    parser.add_argument("--out_file", type=str, default='',
+                        help="File to write results to")
+    parser.add_argument("--save", type=str, default='checkpoints/',
+                        help="Directory to save results")
     args = parser.parse_args()
     return args
 
@@ -135,7 +151,7 @@ if model_type == 'elu11':
 else:
     raise NotImplementedError
 
-# Init VCL - for constant eps use apply_vcl(model, tmp_input, sample_size, eps_learn=False) can be used
+# Init VCL - for constant eps: apply_vcl(model, tmp_input, sample_size, eps_learn=False)
 if use_vcl:
     if vcl_as_a_layer:
         model.vcls = [w for n, w in model.named_parameters() if 'vcl' in n]
@@ -277,7 +293,9 @@ for epoch in range(0, epochs):
     error = AverageMeter()
     test_batches = int(np.floor(num_test_images / batchsize))
     for j in range(test_batches):
-        test_batch_images = test_images[j * batchsize:j * batchsize + batchsize, :, :, :].transpose(0,3,1,2)
+        test_batch_images = \
+            test_images[j * batchsize:j * batchsize + batchsize, :, :, :].transpose(0,3,
+                                                                                    1,2)
         test_batch_lab = test_lab[j * batchsize:j * batchsize + batchsize]
         test_batch_images = torch.from_numpy(test_batch_images).cuda()
         test_batch_lab = torch.Tensor(test_batch_lab).long()
@@ -300,7 +318,9 @@ for epoch in range(0, epochs):
         # measure accuracy and record loss
         batch_size = test_batch_lab.size(0)
         _, pred = output.data.cpu().topk(1, dim=1)
-        error.update(torch.ne(pred.squeeze(), test_batch_lab.cpu()).float().sum() / batch_size, batch_size)
+        error.update(torch.ne(pred.squeeze(),
+                              test_batch_lab.cpu()).float().sum() / batch_size,
+                     batch_size)
         losses.update(loss.data.item(), batch_size)
 
         # measure elapsed time
