@@ -52,7 +52,7 @@ def init_vcl(model, pre_activation=True):
     isVCL = not (hasattr(model, 'no_vcl') and model.no_vcl)
 
     if isActivation:
-        print("Adding forward hook to {}: {}".format(type(model), isVCL))
+        print("Adding VCL forward hook to {}: {}".format(type(model), isVCL))
         if isVCL:
             cur_vcl = VCL()
             if pre_activation:

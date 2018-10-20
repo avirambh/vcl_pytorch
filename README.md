@@ -12,7 +12,7 @@ This repository contains a reference implementation (in PyTorch) for
 ## Introduction
 
 ## Usage
-1. Download and extract [CIFAR 10/100](https://www.cs.toronto.edu/~kriz/cifar.html) for python in your data dir
+1. Download and extract [CIFAR 10](https://www.cs.toronto.edu/~kriz/cifar.html) for python in your data dir
 2. Clone this repository
 3. Train using the instructions given in [Train](#train) section
 
@@ -23,8 +23,7 @@ This repository contains a reference implementation (in PyTorch) for
 
 
 ### Train
-As an example, use the following command to train a network with 11
-convolution layers using CIFAR10 data and variance constancy loss:
+As an example, use the following command to train a network with 11 convolution layers and the variance constancy loss:
 
 ```
 python vcl_tests_main.py --bn 0 --use_reg 1 --out_file elu11 --device 0 --model elu11

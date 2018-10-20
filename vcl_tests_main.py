@@ -28,7 +28,7 @@ def parseArguments():
 
     # Positional mandatory arguments
     parser.add_argument("--dataset", type=str, default="cifar10",
-                        help="Choose dataset [cifar10|cifar100]")
+                        help="Dataset to use [cifar10]")
     parser.add_argument("--exp_name", type=str, default="1",
                         help="Experiment name")
     parser.add_argument("--bn", type=int, default=0,
@@ -51,19 +51,13 @@ def parseArguments():
     parser.add_argument("--activation", type=str, default='elu',
                         help="Activation_type [elu|relu|lrelu|tanh]")
     parser.add_argument("--train_path_10", type=str,
-                        default='../data/cifar-10-batches-py/', help="CIFAR10 Train"
-                                                                     " data path")
+                        default='../data/cifar-10-batches-py/',
+                        help="CIFAR10 train data path")
     parser.add_argument("--test_path_10", type=str,
-                        default='../data/cifar-10-batches-py/', help="CIFAR10 Test "
-                                                                     "data path")
-    parser.add_argument("--train_path_100", type=str,
-                        default='../data/cifar-100-batches-py/', help="CIFAR 100 train "
-                                                                      "data path")
-    parser.add_argument("--test_path_100", type=str,
-                        default='../data/cifar-100-batches-py/', help="CIFAR 100 test "
-                                                                      "data path")
+                        default='../data/cifar-10-batches-py/',
+                        help="CIFAR10 test data path")
     parser.add_argument("--device", type=str, default='0', help="CUDA device to use")
-    parser.add_argument("--out_file", type=str, default='',
+    parser.add_argument("--out_file", type=str, default='demo',
                         help="File to write results to")
     parser.add_argument("--save", type=str, default='checkpoints/',
                         help="Directory to save results")
@@ -102,9 +96,7 @@ if dataset=='cifar10':
     train_path = args.train_path_10
     test_path = args.test_path_10
 else:
-    num_of_labels=100
-    train_path = args.train_path_100
-    test_path = args.test_path_100
+    raise NotImplementedError
 os.environ["CUDA_VISIBLE_DEVICES"] = str(device)
 
 # Prepare results file name
@@ -145,7 +137,7 @@ test_lab = test_lab[offset:offset+num_test_images]
 if model_type == 'elu11':
     model = ELUNetwork(use_batchnorm=use_bn,
                        use_vcl=vcl_as_a_layer,
-                       num_labels=10,
+                       num_labels=num_of_labels,
                        network_type='11',
                        debug=debug_model)
 else:
